@@ -13,7 +13,7 @@ import { defineProps } from "vue";
 const props = defineProps({
   href: String,
 });
-console.log(props);
+console.log(props, "props");
 </script>
 
 <style></style>

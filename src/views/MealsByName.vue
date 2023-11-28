@@ -10,9 +10,7 @@
     <!-- [<div class="p-4">
       <p v-for="meal of results" :key="meal.idMeal">{{ meal.strMeal }}</p>
     </div>] -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4 p-5">
-      <MealItem :meals="meals" />
-    </div>
+    <MealsComponent :meals="meals" :initial="initial" />
   </div>
 </template>
 
@@ -20,17 +18,23 @@
 import { computed, onMounted, ref } from "vue";
 import store from "../store";
 import { useRoute } from "vue-router";
-import MealItem from "../components/MealItem.vue";
+import MealsComponent from "../components/MealsComponent";
 
 const route = useRoute();
 const keyword = ref("");
 // const results = ref([]);
 const meals = computed(() => store.state.searchedMeals);
+let initial = false;
 
 function searchMeals() {
   // const response = await axiosClient.get(`/search.php?s=${keyword.value}`);
   // results.value = response.data.meals;
-  store.dispatch("searchMeals", keyword.value);
+  if (keyword.value) {
+    store.dispatch("searchMeals", keyword.value);
+    initial = true;
+  } else {
+    store.commit("setSearchedMeals", []);
+  }
 }
 onMounted(() => {
   keyword.value = route.params.name;

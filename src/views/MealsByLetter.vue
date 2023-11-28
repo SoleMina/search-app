@@ -4,41 +4,40 @@
       <router-link
         v-for="letter of letters"
         :key="letter"
-        @click="searchMeals(letter)"
         :to="{ name: 'byLetter', params: { letter } }"
+        @click="searchMeals"
       >
         {{ letter }}
       </router-link>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4 p-5">
-      <MealItem v-if="results" :meals="results" />
-      <div v-else>No se encontraron productos con esa letra</div>
-    </div>
+    <MealsComponent :meals="results" :initial="initial" />
   </div>
 </template>
 
 <script setup>
-import { computed, defineProps, onMounted, ref } from "vue";
-import MealItem from "../components/MealItem.vue";
+import { onMounted, watch } from "vue";
+import { computed } from "@vue/reactivity";
+import { useRoute } from "vue-router";
 import store from "../store";
-const props = defineProps({
-  letters: Array,
-});
+import MealsComponent from "../components/MealsComponent";
+
+const route = useRoute();
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-const keyword = ref("");
-console.log(props.letters);
-
 const results = computed(() => store.state.mealsByLetter);
+let initial = false;
 
-function searchMeals(letter) {
-  keyword.value = letter;
-  store.dispatch("searchMealsByLetter", keyword.value);
+watch(route, () => {
+  store.dispatch("searchMealsByLetter", route.params.letter);
+});
+
+function searchMeals() {
+  initial = true;
+  store.dispatch("searchMealsByLetter", route.params.letter);
 }
 
 onMounted(() => {
-  if (keyword.value) {
-    searchMeals(keyword.value);
+  if (route.params.letter) {
+    searchMeals();
   }
 });
 </script>

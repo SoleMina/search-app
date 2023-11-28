@@ -4,7 +4,11 @@
       type="text"
       class="rounded border-2 border-gray-200 w-full"
       placeholder="Search for meals"
+      v-model="meal"
     />
+    <div>
+      {{ ingredients.meals }}
+    </div>
     <!-- <div class="flex justify-center gap-2 mt-2">
       <router-link
         v-for="letter of letters"
@@ -39,7 +43,7 @@ onMounted(async () => {
   const response = await axiosClient.get("/list.php?i=list");
   console.log(response.data);
   ingredients.value = response.data;
-  console.log(ingredients);
+  console.log(ingredients, "ingredients");
 });
 </script>
 

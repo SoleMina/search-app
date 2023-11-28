@@ -39,7 +39,7 @@ const props = defineProps({
   meals: Array,
 });
 
-console.log(props);
+console.log(props, "props");
 </script>
 
 <style></style>
